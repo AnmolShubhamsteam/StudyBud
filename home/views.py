@@ -11,10 +11,19 @@ from .models import Room
 def home(request):
     rooms=Room.objects.all()
     return render(request,"home/home.html",context={"rooms":rooms})
-def room(request,pk):
-    r1=None
-    for i in Room:
-        if i["id"]==int(pk):
-            r1=i
+from django.shortcuts import render, get_object_or_404
+def room(request, pk):
+    # rooms = Room.objects.all()
+    # r1 = None
+    # for room in rooms:
+    #     if room.id == int(pk):
+    #         r1 = room
+    #         break
+    # if r1 is None:
+    #     return render(request, "home/room_not_found.html")
+    # context = {"room": r1}
+    # return render(request, "home/room.html", context)
+    r1=Room.objects.get(id=pk)
     context={"r1":r1}
     return render(request,"home/room.html",context)
+

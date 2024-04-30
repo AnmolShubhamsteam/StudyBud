@@ -2,7 +2,9 @@
 
 {% block content %}
 <h1>Homepage</h1>  
-
+<div>
+    <a href="{% url 'createroom' %}">Create Room</a>
+</div>
 <div>
     <div>
         {% for room in rooms %}

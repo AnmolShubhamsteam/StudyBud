@@ -3,12 +3,6 @@ from django.shortcuts import render,redirect
 # Create your views here.
 from .models import Room
 from .forms import RoomForm
-# rooms=[
-#     {"id":1,"name":"Learning Python"},
-#     {"id":2,"name":"Learning Machine Learning"},
-#     {"id":3,"name":"Learning Data Analytics"}
-#     ]
-
 def home(request):
     rooms=Room.objects.all()
     return render(request,"home/home.html",context={"rooms":rooms})
@@ -48,4 +42,11 @@ def updateRoom(request,pk):
             return redirect("home")
     context={"form":form}
     return render (request,"home/room_form.html",context)
+def deleteRoom(request,pk):
+    rooms=Room.objects.get(id=pk)
+    if request.method=="POST":
+        rooms.delete()
+        return redirect("home")
+    context={"obj":rooms}
+    return render(request,"home/delete.html",context)
     

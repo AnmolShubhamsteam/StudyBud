@@ -23,4 +23,5 @@ urlpatterns = [
     path("admin/",admin.site.urls),
     path("create-room/",createRoom,name="createroom"),
     path("update-room/<str:pk>",updateRoom,name="updateroom"),
+    path("delete-room/<str:pk>",deleteRoom,name="deleteroom"),
 ]

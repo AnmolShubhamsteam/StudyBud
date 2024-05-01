@@ -21,5 +21,6 @@ urlpatterns = [
     path("",home,name="home"),
     path("room/<str:pk>/",room,name="room"),
     path("admin/",admin.site.urls),
-    path("create-room/",createRoom,name="createroom")
+    path("create-room/",createRoom,name="createroom"),
+    path("update-room/<str:pk>",updateRoom,name="updateroom"),
 ]

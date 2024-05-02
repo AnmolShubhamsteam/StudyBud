@@ -1,6 +1,5 @@
 from django.shortcuts import render,redirect
-# from django.http import HttpResponse as res
-# Create your views here.
+from django.http import HttpResponse as res
 from .models import Room
 from.models import Topic
 from .forms import RoomForm
@@ -11,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 def login_page(request):
     if request.method == "POST":
@@ -32,7 +32,10 @@ def login_page(request):
             return render(request, "home/login_reg.html", {})
     else:
         return render(request, "home/login_reg.html", {})
-
+    
+def log_out(request):
+    logout(request)
+    return redirect("home")
 
 def home(request):
     q = request.GET.get("q") if request.GET.get("q") is not None else ""
@@ -61,6 +64,8 @@ def room(request, pk):
     context={"r1":r1}
     return render(request,"home/room.html",context)
 
+
+@login_required(login_url="login")
 def createRoom(request):
     form=RoomForm()
     if (request.method == "POST"):
@@ -71,9 +76,14 @@ def createRoom(request):
     context={"form":form}
     return render(request,"home/room_form.html",context)
 
+@login_required(login_url="login")
 def updateRoom(request,pk):
     rooms=Room.objects.get(id=pk)
     form=RoomForm(instance=rooms)
+
+    if request.user!=rooms.host:
+        return res("You are not allowed here")
+    
     if request.method=="POST":
         form=RoomForm(request.POST,instance=rooms)
         if form.is_valid():
@@ -81,8 +91,12 @@ def updateRoom(request,pk):
             return redirect("home")
     context={"form":form}
     return render (request,"home/room_form.html",context)
+
+@login_required(login_url="login")
 def deleteRoom(request,pk):
     rooms=Room.objects.get(id=pk)
+    if request.user!=rooms.host:
+        return res("You are not allowed here")
     if request.method=="POST":
         rooms.delete()
         return redirect("home")

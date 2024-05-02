@@ -18,7 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from home.views import *
 urlpatterns = [
-    path("login",login_page,name="login"),
+    path("login/",login_page,name="login"),
+    path("logout/",log_out,name="logout"),
     path("",home,name="home"),
     path("room/<str:pk>/",room,name="room"),
     path("admin/",admin.site.urls),

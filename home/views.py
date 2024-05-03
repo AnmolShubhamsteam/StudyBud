@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse as res
 from .models import Room
-from.models import Topic
+from.models import Topic,Message
 from .forms import RoomForm
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
@@ -18,8 +18,7 @@ def login_page(request):
         return redirect("home")
     if request.method == "POST":
         username = request.POST.get("username").lower()
-        password = request.POST.get("password").lower()
-
+        password = request.POST.get("password")
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
@@ -68,18 +67,16 @@ def home(request):
     return render(request, "home/home.html", context={"rooms": rooms, "Topics": topics,"count":Room_count})
 
 def room(request, pk):
-    # rooms = Room.objects.all()
-    # r1 = None
-    # for room in rooms:
-    #     if room.id == int(pk):
-    #         r1 = room
-    #         break
-    # if r1 is None:
-    #     return render(request, "home/room_not_found.html")
-    # context = {"room": r1}
-    # return render(request, "home/room.html", context)
     r1=Room.objects.get(id=pk)
-    context={"r1":r1}
+    room_messages=r1.message_set.all().order_by("-created")
+    if request.method=="POST":
+        message=Message.objects.create(
+            user=request.user,
+            room=r1,
+            body=request.POST.get("body")
+        )
+        return redirect("room",pk=r1.id)
+    context={"r1":r1,"room_messages":room_messages}
     return render(request,"home/room.html",context)
 
 

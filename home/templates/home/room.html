@@ -1,37 +1,48 @@
 {% extends "main.html" %}
 {% block content %}
-<h1>{{ r1.name }}</h1>
-<p>
-    {{ r1.description }}
-</p>
-
-<div class="comment-wrapper">
-    <h3>
-        Conversations
-    </h3>
-    <hr>
-    {% for m in room_messages %}
+<style>
+    .room-container{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+    }
+</style>
+<div class="room-container">
     <div>
-        <small>
-            @{{ m.user.username }} {{ m.created | timesince }} ago
-            <p>
-                {{ m.body }}
-            </p>
+        <h1>{{ r1.name }}</h1>
+        <p>{{ r1.description }}</p>
+        
+        <div class="comment-wrapper">
+            <h3>Conversations</h3>
             <hr>
-        </small>
+            {% for m in room_messages %}
+            <div>
+                {% if request.user == m.user %}
+                <a href="{% url 'deletemessage' m.id %}">Delete</a>
+                {% endif %}
+                <small>
+                    @{{ m.user.username }} | {{ m.created | timesince }} ago
+                    <p>{{ m.body }}</p>
+                    <hr>
+                </small>
+            </div>
+            {% endfor %}
+            {% if request.user.is_authenticated %}
+            <div class="comment-form">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="body" placeholder="Write your message.....">
+                    <button type="submit">Post</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
     </div>
-    {% endfor %}
-    {% if request.user.is_authenticated %}
-    <div class="comment-form">
-        <form method="POST">
-            {% csrf_token %}
-            <input type="text" name="body" placeholder="Write your message.....">
-            
-        </form>
+    <div>
+        <h3>Participants</h3>
+        <hr>
+        {% for participant in participants %}
+        <div>@{{ participant.username }}</div>
+        {% endfor %}
     </div>
-    {% endif %}
 </div>
-
-
-
 {% endblock %}

@@ -27,4 +27,5 @@ urlpatterns = [
     path("create-room/",createRoom,name="createroom"),
     path("update-room/<str:pk>",updateRoom,name="updateroom"),
     path("delete-room/<str:pk>",deleteRoom,name="deleteroom"),
+    path("delete-message/<str:pk>",deleteMessage,name="deletemessage"),
 ]

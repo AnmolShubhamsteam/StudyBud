@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<style>
+    .profile-container {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+    }
+    </style>
+
+<h1>
+    {{ user.username }}
+
+    <div class="profile-container">
+        <div>
+           {% include "home/topics_component.html" %}
+        </div>
+
+        <div>
+            {% include "home/feed_component.html" %}
+        </div>
+
+        <div>
+            {% include "home/activity_component.html" %}
+        </div>
+    </div>
+    
+</h1>
+
+
+
+{% endblock %}

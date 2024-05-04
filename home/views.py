@@ -64,7 +64,8 @@ def home(request):
         )
     Room_count=rooms.count()
     topics = Topic.objects.all()
-    return render(request, "home/home.html", context={"rooms": rooms, "Topics": topics,"count":Room_count})
+    room_messages=Message.objects.filter(Q(room__topic__name__icontains=q)).order_by("-created")
+    return render(request, "home/home.html", context={"rooms": rooms, "Topics": topics,"count":Room_count,"room_messages":room_messages})
 
 def room(request, pk):
     r1=Room.objects.get(id=pk)
@@ -80,6 +81,17 @@ def room(request, pk):
         return redirect("room",pk=r1.id)
     context={"r1":r1,"room_messages":room_messages,"participants":participants}
     return render(request,"home/room.html",context)
+
+
+def userProfile(request, pk):
+    user = User.objects.get(id=pk)
+    # include all rooms associated with user
+    rooms = user.room_set.all() 
+    Topics=Topic.objects.all()
+    room_messages = Message.objects.filter(user=user)
+    context = {"user": user,"rooms":rooms,"room_messages":room_messages,"Topics":Topics}
+    return render(request, "home/profile.html", context)
+
 
 
 @login_required(login_url="login")
@@ -128,7 +140,8 @@ def deleteMessage(request, pk):
     if request.method == "POST":
         message.delete()
         # Redirect the user back to the room page
-        return redirect("room", pk=message.room.id)
+        # return redirect("room", pk=message.room.id)
+        return redirect("home")
     context = {"message": message}
     return render(request, "home/delete-message.html", context)
     

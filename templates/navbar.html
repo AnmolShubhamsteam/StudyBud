@@ -6,7 +6,8 @@
     <title>Navbar</title>
 </head>
 <body>
-    <a href="/">Home</a>
+    {% load static %}
+    <img src="{% static 'images/Designer.png' %}">
     <form method="GET" action="{% url 'home' %}">
         <input type="text" name="q" placeholder="Search rooms">
     </form>

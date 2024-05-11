@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Navbar</title>
+    <style>
+        /* CSS for adjusting the size of the logo */
+        .logo {
+            width: 150px; /* Adjust width as needed */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
 </head>
 <body>
     {% load static %}
-    <img src="{% static 'images/Designer.png' %}">
+    <img src="{% static 'styles/images/Logo.png' %}" alt="No img" class="logo">
     <form method="GET" action="{% url 'home' %}">
         <input type="text" name="q" placeholder="Search rooms">
     </form>
